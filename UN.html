@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Consistent Direction Card Flip</title>
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #FFFFFF; /* Adjust background color as needed */
+    }
+    .card {
+        width: 250px;
+        height: 250px;
+        perspective: 1000px;
+    }
+    .card-inner {
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        position: relative;
+        transition: transform 2s; /* Speed up the flip transition */
+    }
+    .card-front, .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        background-size: cover;
+    }
+    .card-front {
+        background-image: url('https://raw.githubusercontent.com/tjw2469/cards/refs/heads/main/UN/UN.png'); /* Initially set to second image */
+    }
+    .card-back {
+        background-image: url('https://raw.githubusercontent.com/tjw2469/cards/refs/heads/main/UN/Blue.png'); /* Initially set to first image */
+        transform: rotateY(180deg);
+    }
+</style>
+</head>
+<body>
+<div class="card">
+    <div class="card-inner">
+        <div class="card-front"></div>
+        <div class="card-back"></div>
+    </div>
+</div>
+<script>
+    const cardInner = document.querySelector('.card-inner');
+    const cardFront = document.querySelector('.card-front');
+    const cardBack = document.querySelector('.card-back');
+
+    let images = [
+        'https://raw.githubusercontent.com/tjw2469/cards/refs/heads/main/UN/UN.png',  // Back
+        'https://raw.githubusercontent.com/tjw2469/cards/refs/heads/main/UN/Blue.png', // Front
+        'https://raw.githubusercontent.com/tjw2469/cards/refs/heads/main/UN/Red.png'  // Front
+    ];
+    let sequence = [1, 0, 2, 0]; // Sequence of indexes to use
+    let index = 0;
+    let flipCount = 0;
+
+    function flipCard() {
+        flipCount++;
+        cardInner.style.transform = `rotateY(${180 * flipCount}deg)`;
+        updateImages();
+    }
+
+    function updateImages() {
+        let current = sequence[index];
+        if (flipCount % 2 === 0) { // Even flips: back visible
+            cardFront.style.backgroundImage = `url('${images[current]}')`;
+        } else { // Odd flips: front visible
+            cardBack.style.backgroundImage = `url('${images[current]}')`;
+        }
+        index = (index + 1) % sequence.length;
+    }
+
+    setInterval(flipCard, 2000); // Interval for flipping
+</script>
+</body>
+</html>
